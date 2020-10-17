@@ -9,7 +9,17 @@
         <p>{{article.body}}</p>
         <p>{{article.date}}</p>
     </div>
-
 </div>
+
+<div class="comments-list">
+    <div class="comment-input">
+        <form class='site-form' action="{% url 'articles:create_comment' %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input name='comment_input' type="text" value="Add your comment">
+        </form>
+    </div>
+</div>
+<script src="/static/clear_field.js"></script>
 
 {% endblock %}

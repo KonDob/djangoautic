@@ -10,7 +10,7 @@ from articles import views as articles_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^articles/', include('articles.urls')),
-    re_path(r'^about/$', views.about),
+    re_path(r'^about/$', views.about, name='about'),
     re_path(r'^accounts/', include('accounts.urls')),
     re_path(r'^$', articles_views.article_list, name='home'),
 ]
