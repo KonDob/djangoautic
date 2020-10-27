@@ -1,18 +1,24 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Article, Comment
 from . import forms
 
 # Create your views here.
 
+
 def article_list(request):
     articles = Article.objects.all().order_by('date')
-    return render(request, 'articles/articles_list.html', {'articles': articles})
+    return render(request, 'articles/articles_list.html',
+                  {'articles': articles})
 
-def article_detail(request,slug):
+
+def article_detail(request, slug):
     article = Article.objects.get(slug=slug)
-    return render(request, 'articles/article_detail.html',{'article':article})
+    comments = Comment.objects.all()
+    form = forms.CreateComment()
+    return render(request, 'articles/article_detail.html',
+                  {'article': article, 'comments': comments, 'form': form})
+
 
 @login_required(login_url="/accounts/login/")
 def article_create(request):
@@ -24,27 +30,19 @@ def article_create(request):
             instance.save()
             return redirect('articles:list')
     else:
-       form = forms.CreateArticle() 
-    
-    return render(request, 'articles/article_create.html', {'form':form})
+        form = forms.CreateArticle()
+    return render(request, 'articles/article_create.html', {'form': form})
 
-@login_required
+
+@login_required(login_url="/accounts/login/")
 def create_comment(request):
     if request.method == 'POST':
         form = forms.CreateComment(request.POST)
-        if form.is_valid(data=request.POST):
+        if form.is_valid():
             instance = form.save(commit=False)
             instance.author = request.user
             instance.save()
-            return redirect(request, 'articles/article_detail.html', {'slug':slug})
+            return redirect('articles:list')
     else:
-       form = forms.CreateComment() 
-
-    return redirect(request, 'articles/article_detail.html', {'form':form})
-
-       
-       
-@login_required
-def comments_list(request):
-    comments_list = Comment.objects.all()
-    return render(request, 'articles/articles_list.html', {'comments_list': comments_list})
+        form = forms.CreateComment()
+    return render(request, 'articles/article_create.html', {'form': form})
