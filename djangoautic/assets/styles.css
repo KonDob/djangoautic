@@ -150,3 +150,7 @@ a.highlight{
     border-radius: 4px;
     margin: 10px 0;
 }
+
+#id_body {
+    width: 97%;
+}

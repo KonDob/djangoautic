@@ -13,6 +13,7 @@ def article_list(request):
 
 
 def article_detail(request, slug):
+    request.session['last_visited_slug'] = slug
     article = Article.objects.get(slug=slug)
     comments = Comment.objects.all()
     form = forms.CreateComment()
@@ -36,13 +37,13 @@ def article_create(request):
 
 @login_required(login_url="/accounts/login/")
 def create_comment(request):
+    slug = request.session['last_visited_slug']
     if request.method == 'POST':
         form = forms.CreateComment(request.POST)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.author = request.user
             instance.save()
-            return redirect('articles:list')
-    else:
+            return redirect('articles:detail', slug=slug)
+
         form = forms.CreateComment()
-    return render(request, 'articles/article_create.html', {'form': form})
