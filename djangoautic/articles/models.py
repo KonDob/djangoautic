@@ -21,6 +21,7 @@ class Comment(models.Model):
     author = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
     body = models.TextField(blank=False)
     date = models.DateTimeField(auto_now_add=True)
+    related_article = models.TextField(blank=False)
 
     def __str__(self):
         return self.body[:10] + 'by' + str(self.author)

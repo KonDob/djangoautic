@@ -15,7 +15,7 @@ def article_list(request):
 def article_detail(request, slug):
     request.session['last_visited_slug'] = slug
     article = Article.objects.get(slug=slug)
-    comments = Comment.objects.all()
+    comments = Comment.objects.filter(related_article=slug)
     form = forms.CreateComment()
     return render(request, 'articles/article_detail.html',
                   {'article': article, 'comments': comments, 'form': form})
@@ -43,6 +43,7 @@ def create_comment(request):
         if form.is_valid():
             instance = form.save(commit=False)
             instance.author = request.user
+            instance.related_article = slug
             instance.save()
             return redirect('articles:detail', slug=slug)
 
