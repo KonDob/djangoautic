@@ -45,13 +45,6 @@ def create_comment(request):
             instance.author = request.user
             instance.related_article = slug
             instance.save()
-<<<<<<< HEAD
-            return redirect('articles:list')
-    else:
-        form = forms.CreateComment()
-    return render(request, 'articles/article_create.html', {'form': form})
-=======
             return redirect('articles:detail', slug=slug)
 
         form = forms.CreateComment()
->>>>>>> Comments_functional
