@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class='create-article'>
-    <h2>Create and Awesome article</h2>
+    <h2>Create an Awesome article</h2>
     <form class='site-form' action="{% url 'articles:create' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form }}
